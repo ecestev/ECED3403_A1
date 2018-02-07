@@ -1,0 +1,467 @@
+/************************************************************************
+*
+*	Stephnen Sampson
+*	B00568374
+*	May 2017
+*	ECED 3403 - Computer Architecture
+*	Assignment #1
+*
+*	This file contains:
+*	
+*	Validate operand(s), check addressing mode, and
+*	return number to increment program counter by
+*
+*
+*	Format		Mode						Increment		addrMode	OP1		OP2
+*
+*	@Rn			Indirect					0				1			Y		
+*	@Rn+		Indirect Auto Increment		0				2			Y					
+*	Rn			Register Direct				0				3			Y		Y
+*	x(Rn)		Indexed						1				4			Y		Y
+
+*	&ADDR		Absolute					2				5			Y		Y
+*	ADDR		Relative					2				6			Y		Y
+*	&ADDR(Rn)	Absolute w/Reg				2				7			Y		Y
+*	ADDR(Rn)	Relative w/Reg				2				8			Y		Y
+*	
+*	#x			Immediate					2				9			Y		
+*	#&ADDR 		Immediate					2				10			Y
+*	#ADDR		Immediate					2				11			Y
+*	#&ADDR(Rn)	Immediate					2				12			Y
+*	#ADDR(Rn)	Immediate					2				13			Y
+*********************************************************************/
+
+#include "validation.h"
+
+using namespace std;
+
+int valAddMode(string operand) {
+	
+
+
+	// check indirect @Rn and indirect auto increment '@Rn+'
+	if (operand[0] == '@') {
+		if (toupper(operand[1]) == 'R') {
+			if (operand[2] - '0' > -1 && operand[2] - '0' < 10) {
+				if (operand[3] != NUL) {
+					if (operand[3] - '0' > -1 && operand[3] - '0' < 6) {
+						if (operand[4] == NUL) {
+							//cout <<" REGISTER INDIRECT" << endl;
+							return 1;
+						}
+						if (operand[4] == '+') {
+							if (operand[5] == NUL) {
+								//cout <<" REGISTER INDIRECT AUTO INCR" << endl;
+								return 2;
+							}
+								return -1;						
+						}
+						
+						return -1;
+					}
+					if (operand[3] == '+') {
+						if (operand[4] == NUL) {
+							//cout <<" REGISTER INDIRECT AUTO INCR" << endl;
+							return 2;
+						}						
+						return -1;		
+					} 					
+					return -1;
+				}
+				//cout <<" REGISTER INDIRECT" << endl;
+				return 1;
+			}
+		}
+	}
+	
+
+
+	// Check Register Direct 'Rn'
+	if (toupper(operand[0]) == 'R') {
+		if (operand[1] - '0' > -1) {
+			if (operand[2] == NUL) {
+				//cout <<" REGISTER DIRECT" << endl;
+				return 3;
+			}
+			else {
+				if (operand[2] - '0' < 6) {
+					if (operand[3] == NUL) {
+						//cout <<" REGISTER DIRECT" << endl;
+						return 3;
+					}
+				}
+				else {
+					return -1;
+				}
+			}
+		}
+		else {
+			return -1;
+		}
+	}
+
+
+
+	// check indexed 'xRn'
+	int pos = operand.find('(');
+	if (pos < operand.length()) {
+		if (toupper(operand[pos + 1]) == 'R') {
+			if (operand[pos + 2] - '0' > -1) {
+				if (operand[pos + 3] == ')') {
+					if (operand[pos + 4] == NUL) {
+						//cout <<"INDEXED" << endl;
+						return 4;
+					}
+					return -1;
+				}
+				if (operand[pos + 3] - '0' < 6) {
+					if (operand[pos + 4] == ')') {
+						if (operand[pos + 5] == NUL) {
+							//cout <<"INDEXED" << endl;
+							return 4;
+						}
+						return -1;
+					}
+				}
+				else {
+					return -1;
+				}
+			}
+			else {
+				return -1;
+			}
+		}
+		for (int i = 0; i < pos; i++) {
+			if (isdigit(operand[i]) == 0)
+				break;
+		}
+	}
+	//
+
+	
+
+
+	bool immediate = false;
+	// check immediate '#x'
+	if (operand[0] == '#') {
+		immediate = true;
+		operand = operand.substr(1);
+		// checking for 0x denoting hex
+		if(operand[0] == '0' && operand[1] == 'x'){
+			operand = operand.substr(2);
+			for (int i = 0; i < operand.length(); i++) {
+				if (isxdigit(operand[i]) == 0) {					
+					return -1;
+				}
+			}
+//			cout <<" IMMEDIATE 0x HEX" << endl;
+			return 9;
+		}
+
+		// checking for $ denoting hex
+		if (operand[0] == '$') {
+			operand = operand.substr(1);
+			for (int i = 0; i < operand.length(); i++) {
+				if (isxdigit(operand[i]) == 0) {					
+					return -1;
+				}
+			}
+			return 9;
+		}
+
+		// checking for decimal
+		if (operand[0] == '-')
+			operand = operand.substr(1);
+		if (isdigit(operand[0]) != 0) {
+			for (int i = 0; i < operand.length(); i++) {
+				if (isdigit(operand[i]) == 0) {
+					return -1;
+				}
+			}
+//			cout << " IMMEDIATE DEC" << endl;
+			return 9;
+		}
+		// if control gets to here without returning a value then we will 
+		// see if it is a valid label (relative or absolute) in the next section
+	}
+
+
+
+	// check absolute '&ADDR'
+	if (operand[0] == '&') {
+		if (isalpha(operand[1])) {
+			for (int i = 1; i < operand.length(); i++) {
+				if (isalnum(operand[i]) == 0) {
+					if (operand[i] != '(') {						
+						return -1;
+					}
+					if (operand[i + 1] != 'R') {						
+						return -1;
+					}
+					if (isdigit(operand[i + 2]) == 0) {						
+						return -1;
+					}
+					if (operand[i + 3] == ')') {
+						if (operand[i + 4] != NUL) {							
+							return -1;
+						}
+						if (immediate == false) {
+//							cout << " ABSOLUTE W/REG" << endl;
+							return 7;
+						} else {
+//							cout << " IMMEDIATE ABSOLUTE W/REG" << endl;
+							return 12;	
+						}
+					} 
+					if (isdigit(operand[i + 3]) == 0) {						
+						return -1;
+					}
+					if (operand[i + 3] - '0' > 6) {						
+						return -1;
+					}
+					if (operand[i + 4] != ')') {						
+						return -1;
+					}
+					if (operand[i + 5] != NUL) {						
+						return -1;
+					}
+					if (immediate == false) {
+//						cout << " ABSOLUTE W/REG" << endl;
+						return 7;
+					} else {
+//						cout << " IMMEDIATE ABSOLUTE W/REG" << endl;
+						return 12;	
+					}
+				}
+			}
+			if (immediate == false) {
+//				cout << " ABSOLUTE W/O REG" << endl;
+				return 5;
+			} else {
+//				cout << " IMMEDIATE ABSOLUTE W/O REG" << endl;
+				return 10;	
+			}
+		}
+	}
+
+
+
+	// checking for relative 'ADDR'
+	if (isalpha(operand[0])) {
+		for (int i = 1; i < operand.length(); i++) {
+			if (isalnum(operand[i]) == 0) {
+				if (operand[i] != '(') {					
+					return -1;
+				}
+				if (operand[i + 1] != 'R') {					
+					return -1;
+				}
+				if (isdigit(operand[i + 2]) == 0) {					
+					return -1;
+				}
+				if (operand[i + 3] == ')') {
+					if (operand[i + 4] != NUL) {						
+						return -1;
+					}
+					if (immediate == false) {
+//						cout << " RELATIVE W/REG" << endl;
+						return 8;
+					}
+					else {
+//						cout << " IMMEDIATE RELATIVE W/REG" << endl;
+						return 13;
+					}
+				}
+				if (isdigit(operand[i + 3]) == 0) {					
+					return -1;
+				}
+				if (operand[i + 3] - '0' > 6) {					
+					return -1;
+				}
+				if (operand[i + 4] != ')') {					
+					return -1;
+				}
+				if (operand[i + 5] != NUL) {					
+					return -1;
+				}
+				if (immediate == false) {
+//					cout << " RELATIVE W/REG" << endl;
+					return 8;
+				}
+				else {
+//					cout << " IMMEDIATE RELATIVE W/REG" << endl;
+					return 13;
+				}
+			}
+		}
+		if (immediate == false) {
+//			cout << " RELATIVE W/O REG" << endl;
+			return 6;
+		}
+		else {
+//			cout << " IMMEDIATE RELATIVE W/O REG" << endl;
+			return 11;
+		}
+	}
+	// end checking for relative 'ADDR'
+
+
+	// NO VALID ADDRESSING MODE FOUND
+	return -1;
+}
+
+
+
+int valDirOp(string dir, string operand, int pc)
+{
+
+
+
+	if (dir == "ALIGN") {
+		if (pc % 2 != 0)
+			return 1;
+		else
+			return 0;
+	}
+
+
+
+	if (dir == "BSS") {
+		int pos = 0;
+		int temp = 0;
+		stringstream str;
+
+		// checking for 0x denoting hex
+		if (operand[0] == '0' && operand[1] == 'x') {
+			operand = operand.substr(2);
+			for (int i = 0; i < operand.length(); i++) {
+				if (isxdigit(operand[i]) == 0) {
+					return -1;
+				}
+			}
+			str << hex << operand;
+			str >> hex >> temp;
+			return temp;
+		}
+		
+		// checking for $ denoting hex
+		if (operand[0] == '$') {
+			operand = operand.substr(1);
+			for (int i = 0; i < operand.length(); i++) {
+				if (isxdigit(operand[i]) == 0) {
+					return -1;
+				}
+			}
+			str << hex << operand;
+			str >> hex >> temp;
+			return temp;
+		}
+		
+		// otherwise check if valid decimal value
+		for (int i = 0; i < operand.length(); i++)
+			if (isdigit(operand[i]) == 0)
+				return 0;
+		str << operand;
+		str >> temp;
+		return temp;		
+	}
+
+
+
+	if (dir == "ORG") {
+		int pos = operand.find('0x');
+		operand = operand.substr(pos + 1);
+		stringstream str;
+		str << hex << operand;
+		int temp;
+		str >> hex >> temp;
+		temp -= pc;
+		return temp;
+	}
+	
+
+
+	if (dir == "BYTE") {
+
+	}
+	
+
+
+	if (dir == "END") {
+
+	}
+
+
+
+	if (dir == "EQU") {
+
+	}
+
+
+
+	if (dir == "STRING") {
+
+	}
+	
+
+
+	if (dir == "WORD") {
+
+	}
+
+
+
+	return 0;
+}
+
+
+// Validates label based on criteria outlined in assignment
+bool validate_label(string testlabel) {
+	for (int i = 0; i < testlabel.length(); i++) {
+		if (!isalnum(testlabel[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+// Validates Instruction by Comparing to list of supported instructions and sets record
+// values approperiately
+void validateInst(string testinst, record *test_record, instructions *instr_list) {
+	for (int i = 0; i < testinst.length(); i++)
+		if(isalpha(testinst[i])!=0)
+			testinst[i] = toupper(testinst[i]);
+	
+	int pos = testinst.find('.');
+	if (pos < testinst.length()) {
+		if (testinst[pos + 1] == 'B')
+			test_record->BW = 1;
+		if (testinst[pos + 1] == 'W')
+			test_record->BW = 1;
+		testinst = testinst.substr(0, pos);	
+	}
+	
+	for (int j = 0; j < 31; j++) {
+		if (testinst == instr_list->mnem[j]) {
+			test_record->found = true;
+			test_record->insttype = instr_list->type[j];
+			test_record->mnem = instr_list->mnem[j];
+			test_record->opcode = instr_list->opcode[j];
+		}
+	}
+}
+
+// Validates Directive by Comparing to list of supported directives and sets record
+// values approperiately
+void validateDir(string testdir, record *test_record, directives *dir_list) {
+	for (int i = 0; i < testdir.length(); i++)
+		testdir[i] = toupper(testdir[i]);
+
+	for (int j = 0; j < 8; j++) {
+		if (testdir == dir_list->mnem[j]) {
+			test_record->found = true;
+			test_record->dirtype = dir_list->args[j];
+			test_record->mnem = dir_list->mnem[j];
+		}
+	}
+}

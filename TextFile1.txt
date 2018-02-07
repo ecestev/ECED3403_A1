@@ -1,0 +1,179 @@
+	//  tokenize string and store tokens in a vector for easy processing
+	//	istringstream iss(to_parse);
+	//	vector<string> tokens{ istream_iterator<string>{iss},istream_iterator<string>{} };
+
+
+
+		// DIAGNOSTIC INFORMATION ONLY
+	if (rec->found == true) {											// if an instruction|directive has been found
+		cout << "Line: " << linenum << " - ";							// output the line number it was found on
+		if (rec->dirtype > -1)											// if it was an instruction
+			cout << "Directive " << rec->mnem << " Found" << endl;	// specify which instruction
+		if (rec->insttype > -1)											// if it was a directive
+			cout << "Instruction " << rec->mnem << " Found" << endl; // specify which directive
+	}
+	// END DIAGNOSTIC INFORMATION
+
+
+
+// check immediate #x
+	if (operand[0] == '#') {
+		int temp = 0;
+		stringstream str;		
+		// checking for 0x denoting hex
+		if(operand[1] == '0' && operand[2] == 'x'){
+			operand = operand.substr(3);
+			if (operand.length() != 4)
+				return -1;	
+			for (int i = 0; i < 4; i++) {
+				if (isxdigit(operand[i]) == 0) {
+					return -1;
+				}
+			}
+			str << hex << operand;
+			str >> hex >> temp;
+			cout << "IMMEDIATE" << endl;
+			return 5;
+		}
+
+		// checking for $ denoting hex
+		if (operand[1] == '$') {
+			operand = operand.substr(2);
+			if (operand.length() == 4) {
+				for (int i = 0; i < 4; i++) {
+					if (isxdigit(operand[i]) == 0) {
+						return -1;
+					}
+				}
+				str << hex << operand;
+				str >> hex >> temp;
+				cout << "IMMEDIATE" << endl;
+				return 5;
+			} else {
+				return -1;
+			}
+		}
+
+		// operand is a decimal value
+		operand = operand.substr(1);
+		for(int i = 0; i < operand.length(); i++) {
+			if (isdigit(operand[i]) == 0) {
+				return -1;
+			}
+		}
+		str << operand;
+		str >> temp;
+		cout << "IMMEDIATE" << endl;
+		return 5;
+	}
+
+
+
+
+
+
+
+
+
+
+	void print_s1(s1record *s1rec) {
+	cout << endl << endl << endl;
+	bool set = false;
+	char temp = '0';
+	for (vector<char>::const_iterator iterator = s1rec->type.begin(), end = s1rec->type.end(); iterator != end; ++iterator) {
+		if(set == false){
+			temp = *iterator;
+			set = true;
+		}
+		else {
+			cout << HEX(*iterator);
+			cout << HEX(temp);
+			set = false;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+// if instruction was of type absolute or relative then the operand contains a label
+// and possibly an index as well. Separate and store these pieces in the record so
+// that the label (possible forward reference) can be added to the symbol table if
+// needed
+void separateLabel(int addrmode1, int addrmode2, record *lblseprec) {
+	int pos1 = -1;
+	int pos2 = -1;
+	if (addrmode1 > 4 && addrmode1 < 9) {
+		lblseprec->srcOpLbl = lblseprec->srcop;
+		if (lblseprec->srcOpLbl[0] == '#')
+			lblseprec->srcOpLbl = lblseprec->srcOpLbl.substr(1);
+		if (lblseprec->srcOpLbl[0] == '&')
+			lblseprec->srcOpLbl = lblseprec->srcOpLbl.substr(1);
+		pos1 = lblseprec->srcOpLbl.find('(');
+		if (pos1 < lblseprec->srcOpLbl.length()) {
+			lblseprec->srcOpLbl = lblseprec->srcOpLbl.substr(0, pos1);
+			pos2 = lblseprec->srcOpLbl.find(')');
+			if (pos2 < lblseprec->srcOpLbl.length())
+				lblseprec->srcOpIndx = lblseprec->srcOpLbl.substr(pos1 + 1, pos2);
+		}
+	}
+
+	if (addrmode2 > 4 && addrmode2 < 9) {
+		lblseprec->dstOpLbl = lblseprec->dstop;
+		if (lblseprec->dstOpLbl[0] == '#')
+			lblseprec->dstOpLbl = lblseprec->dstOpLbl.substr(1);		
+		if (lblseprec->dstOpLbl[0] == '&')
+			lblseprec->dstOpLbl = lblseprec->dstOpLbl.substr(1);
+		pos1 = lblseprec->dstOpLbl.find('(');
+		if (pos1 < lblseprec->dstOpLbl.length()) {
+			lblseprec->dstOpLbl = lblseprec->dstOpLbl.substr(0, pos1);
+			pos2 = lblseprec->dstOpLbl.find(')');
+			if (pos2 < lblseprec->dstOpLbl.length())
+				lblseprec->dstOpIndx = lblseprec->dstOpLbl.substr(pos1 + 1, pos2);
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+/*
+extern struct symtblrec;
+extern std::list<symtblrec> *symbol_table;	// initialize pointer to new list for symbol table
+extern struct instructions *inst_list;
+extern struct directives *dir_list;
+extern struct record;
+extern std::list<record> *record_table;		// initialize pointer to new list for record table
+*/
+
+
+
+
+
+
+
+// TWO OP
+				cout << "OPC:  " << bitset<4>(rec->opcode>>12) << endl;
+				cout << "SRC:  " << bitset<4>(rec->source) << endl;
+				cout << "Ad:   " << bitset<1>(rec->Ad) << endl;
+				cout << "BW:   " << bitset<1>(rec->BW) << endl;
+				cout << "As:   " << bitset<2>(rec->As) << endl;
+				cout << "DST:  " << bitset<4>(rec->dest) << endl;
+
+// ONE OP
+				cout << "OPC:  " << bitset<9>(rec->opcode >> 7) << endl;
+				cout << "BW:   " << bitset<1>(rec->BW) << endl;
+				cout << "As:   " << bitset<2>(rec->As) << endl;
+				cout << "DST:  " << bitset<4>(rec->source) << endl;

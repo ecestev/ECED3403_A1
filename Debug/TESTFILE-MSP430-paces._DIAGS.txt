@@ -1,0 +1,52 @@
+ ----------------------------------------------------------
+                     STARTING FIRST PASS                   
+ ----------------------------------------------------------
+
+ Parsing TESTFILE-MSP430-paces.asm and Identifying Records
+ Line: 1 - Ignored Due To: Comment
+ Line: 2 - Ignored Due To: Comment
+ Line: 3 - Ignored Due To: Comment
+ Line: 4 - Ignored Due To: Comment
+ Line: 5 - Ignored Due To: Comment
+ Line: 6 - Ignored Due To: EMPTY LINE
+ Line: 7 - Ignored Due To: EMPTY LINE
+ Line: 12 - Ignored Due To: EMPTY LINE
+ Line: 16 - Ignored Due To: EMPTY LINE
+ Line: 23 - Ignored Due To: EMPTY LINE
+ Line: 41 - Ignored Due To: EMPTY LINE
+ Line: 83 - Ignored Due To: EMPTY LINE
+ Line: 89 - Ignored Due To: EMPTY LINE
+ Line: 90 - Ignored Due To: EMPTY LINE
+ Line: 91 - Ignored Due To: EMPTY LINE
+ Line: 93 - Ignored Due To: EMPTY LINE
+ Line: 98 - Ignored Due To: EMPTY LINE
+ Line: 99 - Ignored Due To: EMPTY LINE
+ Successfully parsed TESTFILE-MSP430-paces.asm
+ Number of Errors: 0
+ Number of Unknown Labels: 0
+
+
+ ----------------------------------------------------------
+                    STARTING SECOND PASS                   
+ ----------------------------------------------------------
+
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S1REC
+EMIT S5REC
+EMIT S9REC
+
+ ----------------------------------------------------------
+                       END OF PROGRAM                      
+ ----------------------------------------------------------
+

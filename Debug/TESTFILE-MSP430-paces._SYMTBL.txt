@@ -1,0 +1,49 @@
+ ----------------------------------------------------------
+                        SYMBOL TABLE                       
+ ----------------------------------------------------------
+
+ ENTRY     LABEL     TYPE      LOCATION COUNTER
+
+ 1         R0        REGISTER   0     |  0x0
+ 2         R1        REGISTER   1     |  0x1
+ 3         R2        REGISTER   2     |  0x2
+ 4         R3        REGISTER   3     |  0x3
+ 5         R4        REGISTER   4     |  0x4
+ 6         R5        REGISTER   5     |  0x5
+ 7         R6        REGISTER   6     |  0x6
+ 8         R7        REGISTER   7     |  0x7
+ 9         R8        REGISTER   8     |  0x8
+ 10        R9        REGISTER   9     |  0x9
+ 11        R10       REGISTER   10    |  0xa
+ 12        R11       REGISTER   11    |  0xb
+ 13        R12       REGISTER   12    |  0xc
+ 14        R13       REGISTER   13    |  0xd
+ 15        R14       REGISTER   14    |  0xe
+ 16        R15       REGISTER   15    |  0xf
+ 17        LABEL2    KNOWN      17    |  0x11
+ 18        LABEL     KNOWN      53    |  0x35
+ 19        ADDR      KNOWN      8192  |  0x2000
+ 20        INDRCT    KNOWN      1280  |  0x500
+ 21        IMM       KNOWN      4096  |  0x1000
+ 22        IMM1      KNOWN      57    |  0x39
+ 23        ABS       KNOWN      5376  |  0x1500
+ 24        ADDR2     KNOWN      8198  |  0x2006
+ 25        ALPHA     KNOWN      8192  |  0x2000
+ 26        LABEL4    KNOWN      4098  |  0x1002
+ 27        IND       KNOWN      69    |  0x45
+ 28        A22       KNOWN      14    |  0xe
+ 29        R56       KNOWN      22    |  0x16
+ 30        START     KNOWN      5888  |  0x1700
+ 31        BLOCK     KNOWN      5902  |  0x170e
+ 32        Lab6      KNOWN      666   |  0x29a
+ 33        Lab7      KNOWN      747   |  0x2eb
+ 34        label     KNOWN      123   |  0x7b
+ 35        Lab4      KNOWN      747   |  0x2eb
+ 36        Labelly41 KNOWN      4102  |  0x1006
+ 37        Loop      KNOWN      4102  |  0x1006
+ 38        Data      KNOWN      8714  |  0x220a
+ 39        Data8     KNOWN      8192  |  0x2000
+ 40        Label96   KNOWN      8196  |  0x2004
+ 41        lab08     KNOWN      8196  |  0x2004
+ 42        last      KNOWN      8200  |  0x2008
+ 43        label40   KNOWN      8714  |  0x220a

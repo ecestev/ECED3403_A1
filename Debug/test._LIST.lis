@@ -1,0 +1,8 @@
+ADDRESS  MNEM        OP1        OP2    MACHINE INST
+
+     0    ORG       $800               
+  2048   WORD         10               000A
+   802   WORD          0               0000
+   804    ORG      $1000               
+  1000    MOV      &DATA        R10    421A0800
+  1004    ADD        R10       &SUM    5A820802

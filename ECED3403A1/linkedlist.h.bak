@@ -1,0 +1,28 @@
+#pragma once
+#include <iostream>
+#include <fstream>
+#include "records.h"
+
+using namespace std;
+
+struct node {
+friend struct deque;
+record_container record;			// this is the data in a list element
+node *next;							// pointer to the next node in the list
+node *prev;							// pointer to the previous node in the list
+node(record_container x);			// data = x, prev=next = NULL
+};
+
+
+struct deque {
+node* front;						// pointer to the front of the list
+node* back;					  		// pointer to the back of the list
+deque(void);						// constructor of an empty queue
+void put_front(record_container x);	// put x at the front of the list
+void put_back(record_container x);	// put x at the back of the list
+void put_auto(record_container x);	// put at front if empty, else at back
+record_container get_front(void);	// get the node at the front of the list
+record_container get_back(void);	// get the node at the back of the list
+bool empty(void) const;				// check for empty deque
+void write(ostream& out) const;		// write data stored to out
+};

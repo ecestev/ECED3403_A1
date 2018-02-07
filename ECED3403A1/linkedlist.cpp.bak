@@ -1,0 +1,112 @@
+#include "linkedlist.h"
+
+
+node::node(record_container x)
+{
+	record = x;
+	next = NULL;
+	prev = NULL;
+}
+
+deque::deque(void) {
+	back = front;
+	front = NULL;
+}
+
+void deque::put_front(record_container x) {
+	node* ptr;
+	ptr = new node(x);
+	if (front != NULL) {
+		ptr->prev = front;
+		front->next = ptr;
+		front = ptr;
+	}
+	else {
+		front = ptr;
+		back = ptr;
+		front->next = NULL;
+		back->prev = NULL;
+	}
+
+}
+
+void deque::put_back(record_container x) {
+	node* ptr;
+	ptr = new node(x);
+	if (back != NULL) {
+		ptr->next = back;
+		back->prev = ptr;
+		back = ptr;
+	}
+	else {
+		front = ptr;
+		back = ptr;
+		front->next = NULL;
+		back->prev = NULL;
+	}
+}
+
+void deque::put_auto(record_container x) {
+	node* ptr;
+	ptr = new node(x);
+	if(front==NULL)
+	{
+		front = ptr;
+		back = ptr;
+		front->next = NULL;
+		back->prev = NULL;
+	} else {
+		ptr->next = back;
+		back->prev = ptr;
+		back = ptr;
+	}
+}
+
+
+
+record_container deque::get_front(void) {
+	record_container temp;
+	temp = front->record;
+
+	node* ptr = front;
+	front = front->prev;
+
+	if (front != NULL) 
+		front->next = NULL;
+	delete ptr;
+	return temp;
+}
+
+record_container deque::get_back(void) {
+	record_container temp;
+	temp = back->record;
+
+	node* ptr = back;
+	back = back->next;
+
+	if (back != NULL) back->prev = NULL;
+
+	delete ptr;
+	return temp;
+}
+
+bool deque::empty(void) const {
+	return (front == NULL && back == NULL);
+}
+
+void deque::write(ostream& out) const {
+	int entry = 0;
+	node* ptr = front;
+	cout << "----------------------------------" << endl;
+	cout << "           SYMBOL TABLE           " << endl;
+	cout << "----------------------------------" << endl << endl;
+	while (ptr != NULL) {
+		entry++;
+		out << "Entry " << entry << ": ";
+		out << ptr->record.label << " ";
+		out << ptr->record.type << " ";
+		out << ptr->record.value << " ";
+		out << endl;
+		ptr = ptr->prev;
+	}
+}

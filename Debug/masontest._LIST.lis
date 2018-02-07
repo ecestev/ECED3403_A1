@@ -1,0 +1,4 @@
+ADDRESS  MNEM        OP1        OP2    MACHINE INST
+
+     0    JMP       data               3C00
+     2   WORD         10               000A

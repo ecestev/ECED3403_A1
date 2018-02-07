@@ -1,0 +1,83 @@
+ADDRESS  MNEM        OP1        OP2    MACHINE INST
+
+     0    EQU         17               
+     0    EQU        $35               
+     0    EQU      $2000               
+     0    ORG       $500               
+  1280    MOV        @R2         R4    4224
+   502   SWPB       @R4+               10B4
+   504    MOV       @R3+        R13    433D
+   506   ADDC       @R11         R5    6B25
+   508    ORG      $1000               
+  1000    ADD      #IMM1        R12    503C0039
+  1004    ADD       #425   ADDR(R3)    50B301A92000
+  100A    ADD        #42        R14    503E002A
+  100E    ORG      $1500               
+  1500    ADD     &LABEL         R2    52120035
+  1504    MOV      &ADDR         R3    42132000
+  1508    SUB     &ADDR2         R4    82142006
+  150C    SUB     &ADDR2      &ADDR    829220062000
+  1512    ORG      $2000               
+  2000    MOV      LABEL     LABEL4    4090FFFFE033FFFFF000
+  2006    ADD    $12(R3) LABEL4(R2)    539200121002
+  200C    SXT        R12               118C
+  200E    MOV    IND(R4)         R2    44120045
+  2012    MOV     0(R11)    A22(R3)    4B930000000E
+  2018    MOV        R56  ADDR(R12)    409CFFFFDFFC2000
+  201E    EQU      $1002               
+  201E    EQU      $2006               
+  201E    EQU         14               
+  201E    EQU         57               
+  201E    EQU         69               
+  201E    ORG      $1700               
+  1700    RRC         R4               1004
+  1702   PUSH        @R5               1225
+  1704   BYTE          3               03
+  1705  ALIGN      ALIGN               
+  1706 STRING              FOO BAR     464F4F20424152
+  170D  ALIGN      ALIGN               
+  170E    BSS          6               000000000000
+  1714    EQU        666               
+  1714    EQU      $02EB               
+  1714 STRING         asdfasdfasdf     617364666173646661736466
+  1720    ADD   ADDR(R1)      0(R2)    519220000000
+  1726    ADD    $FF(R1)     LABEL2    519000FFFFFFE8E9
+  172C    EQU        123               
+  172C    MOV       #123      label    40B0007BFFFFE94D
+  1732    ADD       #123         R6    5036007B
+  1736   SUBC     &label     &label    7292007B007B
+  173C    SUB         R9        R10    890A
+  173E    CMP     #$AbCd     &label    90B2ABCD007B
+  1744   DADD       #$AB  label(R6)    A0B600AB007B
+  174A    BIT  label(R7)      label    B790007BFFFFE92F
+  1750    ADD        @R5     &LABEL    55A20035
+  1754    ADD       @R7+         R3    5733
+  1756    ADD      @R10+       &ABS    5AB21500
+  175A    BIS       @R7+  label(R7)    D7B7007B
+  175E    XOR        @R4        R10    E42A
+  1760    AND     &label        R13    F21D007B
+  1764    EQU         22               
+  1764   RETI                          1300
+  1766  ALIGN      ALIGN               
+  1766   BYTE        $65               65
+  1767  ALIGN      align               
+  1768    ADD     #LABEL        R14    503E0035
+  176C    EQU       $2EB               
+  176C    SUB        #R3      LABEL    80B00003FFFFE8C7
+  1772    ADD       #$FF        R13    503D00FF
+  1776   BYTE         85               55
+  1777   BYTE         53               35
+  1778  ALIGN      ALIGN               
+  1778    ORG      $1000               
+  1000    MOV         #1         R4    40340001
+  1004   SWPB         R4               1084
+  1006    ADD        @R7   Data(R5)    57A5220A
+  100A    ADD   Data(R5)         R4    5514220A
+  100E   ADDC         #1         R5    60350001
+  1012    ORG      $2000               
+  2000    BSS          4               00000000
+  2004    ADD       @R6+      &Loop    56B21006
+  2008    ORG      $2200               
+  2200    JMP    Label96               3F01
+  2202    ADD         #8         R6    50360008
+  2206    ADD        #-1         R7    5037
