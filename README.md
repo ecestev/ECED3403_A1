@@ -1,3 +1,5 @@
+
+
 Computer engineers are often responsible for designing and writing such software, including tools known as assemblers, which translate assembly-language programs into machine code. The machine code program can then be loaded into the machine’s memory for subsequent execution.
 
 In those situations where the new machine is unable to run the assembler (for example, it is still under development), a cross-assembler is required.1 The cross-assembler runs on a second machine, producing a program that can be loaded and executed on the target machine or an emulator of the target machine.
